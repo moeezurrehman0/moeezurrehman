@@ -1,0 +1,1 @@
+web: gunicorn tellme.wsgi --log-file -
