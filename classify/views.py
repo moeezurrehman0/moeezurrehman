@@ -97,4 +97,4 @@ def index(request):
 			print(temp_lista[0],temp_listb[0],ans)
 			print(address)
 
-		return JsonResponse(temp_lista[0],safe=False)
+		return HttpResponse(temp_lista[0],safe=False)
