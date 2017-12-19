@@ -66,35 +66,89 @@ def index(request):
 			#Loads label file ,strips pff carriage return
 			label_lines=[line.rstrip() for line
 						in tf.gfile.GFile("./"+address+"graph_files/basic_objects_retrained_labels.txt")]
-						# in tf.gfile.GFile(os.path.join(os.pardir, "basic_objects_retrained_labels.txt"))]
-						# in tf.gfile.GFile("/home/moeez/tdjango/ten2/webapp/static/webapp/basic_objects_retrained_labels.txt")]
 				#Unpersists grapg from file 
 			# with tf.gfile.FastGFile("/home/moeez/tdjango/ten2/webapp/static/webapp/basic_objects_retrained_graph.pb",'rb') as f:
 			with tf.gfile.FastGFile(("./"+address+"graph_files/basic_objects_retrained_graph.pb"),'rb') as f:
 				graph_def=tf.GraphDef()
 				graph_def.ParseFromString(f.read())
 				_ = tf.import_graph_def(graph_def,name='')
+			
+		elif(catID==2):
+			#Loads label file ,strips pff carriage return
+			label_lines=[line.rstrip() for line
+						in tf.gfile.GFile("./"+address+"graph_files/basic_objects_retrained_labels.txt")]
+				#Unpersists grapg from file 
+			# with tf.gfile.FastGFile("/home/moeez/tdjango/ten2/webapp/static/webapp/basic_objects_retrained_graph.pb",'rb') as f:
+			with tf.gfile.FastGFile(("./"+address+"graph_files/basic_objects_retrained_graph.pb"),'rb') as f:
+				graph_def=tf.GraphDef()
+				graph_def.ParseFromString(f.read())
+				_ = tf.import_graph_def(graph_def,name='')
+
+		elif(catID==3):
+			#Loads label file ,strips pff carriage return
+			label_lines=[line.rstrip() for line
+						in tf.gfile.GFile("./"+address+"graph_files/basic_objects_retrained_labels.txt")]
+				#Unpersists grapg from file 
+			# with tf.gfile.FastGFile("/home/moeez/tdjango/ten2/webapp/static/webapp/basic_objects_retrained_graph.pb",'rb') as f:
+			with tf.gfile.FastGFile(("./"+address+"graph_files/basic_objects_retrained_graph.pb"),'rb') as f:
+				graph_def=tf.GraphDef()
+				graph_def.ParseFromString(f.read())
+				_ = tf.import_graph_def(graph_def,name='')
+		elif(catID==4):
+			#Loads label file ,strips pff carriage return
+			label_lines=[line.rstrip() for line
+						in tf.gfile.GFile("./"+address+"graph_files/basic_objects_retrained_labels.txt")]
+				#Unpersists grapg from file 
+			# with tf.gfile.FastGFile("/home/moeez/tdjango/ten2/webapp/static/webapp/basic_objects_retrained_graph.pb",'rb') as f:
+			with tf.gfile.FastGFile(("./"+address+"graph_files/basic_objects_retrained_graph.pb"),'rb') as f:
+				graph_def=tf.GraphDef()
+				graph_def.ParseFromString(f.read())
+				_ = tf.import_graph_def(graph_def,name='')
+		elif(catID==5):
+			#Loads label file ,strips pff carriage return
+			label_lines=[line.rstrip() for line
+						in tf.gfile.GFile("./"+address+"graph_files/basic_objects_retrained_labels.txt")]
+				#Unpersists grapg from file 
+			# with tf.gfile.FastGFile("/home/moeez/tdjango/ten2/webapp/static/webapp/basic_objects_retrained_graph.pb",'rb') as f:
+			with tf.gfile.FastGFile(("./"+address+"graph_files/basic_objects_retrained_graph.pb"),'rb') as f:
+				graph_def=tf.GraphDef()
+				graph_def.ParseFromString(f.read())
+				_ = tf.import_graph_def(graph_def,name='')
+			
+			
+			
+			
+			
+			
+			
+			
+			
 				#######################################################
-			with tf.Session() as sess:
-				#Feed the image_data as input to the graph and get first prediction
-				softmax_tensor=sess.graph.get_tensor_by_name('final_result:0')
+		with tf.Session() as sess:
+			#Feed the image_data as input to the graph and get first prediction
+			softmax_tensor=sess.graph.get_tensor_by_name('final_result:0')
+		
+			predictions=sess.run(softmax_tensor, \
+					{'DecodeJpeg/contents:0':image_data})
+		
+			#Sort to show labels of first predicton in order of confidence
+			top_k = predictions[0].argsort()[-len(predictions[0]):][::-1]
 			
-				predictions=sess.run(softmax_tensor, \
-						{'DecodeJpeg/contents:0':image_data})
-			
-				#Sort to show labels of first predicton in order of confidence
-				top_k = predictions[0].argsort()[-len(predictions[0]):][::-1]
-				
-				b=0
-				a=any
-				for node_id in top_k:
-					human_string = label_lines[node_id]
-					score=predictions[0][node_id]
-					#true hai ye temp_list.append("%s(score=%.5f)"%(human_string, score))
-					temp_lista.append("%s"%(human_string))
-					temp_listb.append("%.4f"%(score))
-				######################################################################
+			b=0
+			a=any
+			for node_id in top_k:
+				human_string = label_lines[node_id]
+				score=predictions[0][node_id]
+				#true hai ye temp_list.append("%s(score=%.5f)"%(human_string, score))
+				temp_lista.append("%s"%(human_string))
+				temp_listb.append("%.4f"%(score))
+			######################################################################
 			print(temp_lista[0],temp_listb[0],ans)
 			print(address)
 
-		return HttpResponse(temp_lista[0],safe=False)
+		return JsonResponse(temp_lista[0],safe=False)
+	# elif request.method=="GET":
+	# 	HttpResponse("what do you think you're doing brah")
+	
+	# else:
+	# 	print("lol guys what you lookin for?")
